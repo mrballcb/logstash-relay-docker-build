@@ -1,0 +1,16 @@
+description: The Elasticsearch Logstash server, in a relay configuration
+name: logstash-relay
+version: 0.0.1-1
+appVersion: 5.1.2
+keywords:
+  - elasticsearch
+  - logstash
+  - logstash-relay
+home: https://www.elastic.co/products/logstash
+icon: https://static-www.elastic.co/assets/blteb1c97719574938d/logo-elastic-elasticsearch-lt.svg
+sources:
+  - https://github.com/mrballcb/logstash-relay-docker-build
+maintainers:
+  - name: Todd Lyons
+    email: todd.lyons@pgi.com
+engine: gotpl

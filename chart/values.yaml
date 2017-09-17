@@ -1,0 +1,32 @@
+image:
+  repository: mrballcb/logstash-relay-docker-build
+  tag: latest
+  imagePullPolicy: IfNotPresent
+replicas: 1
+env:
+  - name: OUTPUT_DEST_HOST
+    value: beats-logs.example.com
+  - name: OUTPUT_DEST_PORT
+    value: 6000
+  - name: INPUT_BEATS_PORT
+    value: 5044
+  - name: INPUT_SYSLOG_PORT
+    value: 514
+  - name: INPUT_JSON_PORT
+    value: 8000
+  - name: LOGSTASH_ENV
+    value: dev
+  - name: LOGSTASH_SSL_ENABLE
+    value: false
+  - name: LOGSTASH_SSL_CONTENT
+    value: |
+       ssl_ca => "/logstash/certs/cacert.pem"
+       ssl_key => "/logstash/certs/logstash.key"
+       ssl_cert => "/logstash/certs/logstash.cert"
+resources:
+  limits:
+    cpu: 100m
+    memory: 100Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi
