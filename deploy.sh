@@ -19,5 +19,9 @@ do
   sed -i -e "s|__${ARG}__|${!ARG}|g" config/logstash.conf
 done
 
+if [ -n "$logstash_debug" ]; then
+  echo "Debugging mode, not executing logstash program"
+  while true; do sleep 1000; done
+fi
 
 bin/logstash -f config/logstash.conf

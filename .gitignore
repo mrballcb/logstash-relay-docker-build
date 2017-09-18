@@ -1,2 +1,4 @@
 .*.swp
-certs
+certs/
+kube/
+chart/values-*.yaml

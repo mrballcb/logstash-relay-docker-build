@@ -16,3 +16,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s-%s" .Release.Name $id $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Create a default selector stanza that gets used everywhere.
+One change and it affects all pieces, no more missed edits when changing.
+*/}}
+{{- define "default_selector" }}
+app: {{ template "name" .}}-{{ default "0" .Values.uniqueStackId }}
+release: {{ .Release.Name }}
+{{- end -}}

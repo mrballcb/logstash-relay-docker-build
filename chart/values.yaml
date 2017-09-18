@@ -3,7 +3,16 @@ image:
   tag: latest
   imagePullPolicy: IfNotPresent
 replicas: 1
+namespace: default
+uniqueStackId: dev
+persistence:
+  enabled: false
 env:
+  # The "logstash_debug" env variable will prep the config file, but will not start
+  # logstash.  You can connect and do some debugging if things don't work as expected.
+  # HINT:  bash -x /deploy.sh
+  #- name: logstash_debug
+  #  value: "1"
   - name: LOGSTASH_ENV
     value: dev
   - name: INPUT_BEATS_PORT
@@ -18,12 +27,10 @@ env:
     value: 6000
   - name: OUTPUT_SSL_ENABLE
     value: false
-  - name: OUTPUT_SSL_CONTENT
-    value: |
-       ssl_ca => "/logstash/certs/cacert.pem"
-       ssl_key => "/logstash/certs/logstash.key"
-       ssl_cert => "/logstash/certs/logstash.pem"
-       ssl_verify => true
+  # Uncomment the below setting for TLS encryption. YOU MUST PUT THE REQUIRED FILES IN PLACE
+  #- name: OUTPUT_SSL_CONTENT
+  #  # This is really ugly, but it works. The "|" method did not work, the trailing \n messed up sed.
+  #  value: 'ssl_cacert => "/logstash/certs/cacert.pem"\n     ssl_key => "/logstash/certs/logstash.key"\n     ssl_cert => "/logstash/certs/logstash.pem"\n     ssl_verify => true'
 resources:
   limits:
     cpu: 100m

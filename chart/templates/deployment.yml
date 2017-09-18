@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "default_selector" . | indent 4 }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ default 1 .Values.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        {{- include "default_selector" . | indent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ default "" .Values.image.imagePullPolicy | quote }}
+        ports:
+        - containerPort: 5140
+          protocol: UDP
+          name: syslog
+        - containerPort: 5044
+          protocol: TCP
+          name: beats
+        - containerPort: 8000
+          protocol: UDP
+          name: json
+        command: ["/deploy.sh"]
+        {{- if .Values.env }}
+        env:
+{{ toYaml .Values.env | indent 10 }}
+        {{- end }}
+        {{- if .Values.nodeSelector }}
+        nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+        {{- end }}
+        resources:
+          requests:
+            cpu: 0m
+        volumeMounts:
+        - mountPath: /logstash/certs
+          name: certs
+          readOnly: false
+      volumes:
+      - name: certs
+        {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
