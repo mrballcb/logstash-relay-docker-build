@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: certs
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "default_selector" . | indent 4 }}
+data:
+  cacert.pem: |
+    # Put your custom generated CA certificate here.
+    # Make sure it's indented the same all the way.  In this example
+    # it is 4 spaces.
+  logstash.key: |
+    # Put your private key for your client here.  Again take care with indention.
+  logstash.pem: |
+    # Put your client certificate, signed by your custom CA, here.  INDENT!

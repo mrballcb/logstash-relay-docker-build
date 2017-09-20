@@ -14,19 +14,19 @@ env:
   #- name: logstash_debug
   #  value: "1"
   - name: LOGSTASH_ENV
-    value: dev
+    value: "dev"
   - name: INPUT_BEATS_PORT
-    value: 5044
+    value: "5044"
   - name: INPUT_SYSLOG_PORT
-    value: 514
+    value: "514"
   - name: INPUT_JSON_PORT
-    value: 8000
+    value: "8000"
   - name: OUTPUT_DEST_HOST
-    value: beats-logs.example.com
+    value: "beats-logs.example.com"
   - name: OUTPUT_DEST_PORT
-    value: 6000
+    value: "6000"
   - name: OUTPUT_SSL_ENABLE
-    value: false
+    value: "false"
   # Uncomment the below setting for TLS encryption. YOU MUST PUT THE REQUIRED FILES IN PLACE
   #- name: OUTPUT_SSL_CONTENT
   #  # This is really ugly, but it works. The "|" method did not work, the trailing \n messed up sed.

@@ -2,3 +2,4 @@
 certs/
 kube/
 chart/values-*.yaml
+chart/templates/configmap.yml

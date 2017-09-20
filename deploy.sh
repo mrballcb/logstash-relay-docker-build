@@ -11,10 +11,7 @@ echo "Running on IP: ${internalIp}"
 
 cd /logstash
 # Build the config file
-for ARG in LOGSTASH_ENV \
-           INPUT_BEATS_PORT INPUT_SYSLOG_PORT INPUT_JSON_PORT \
-           OUTPUT_DEST_HOST OUTPUT_DEST_PORT \
-           OUTPUT_SSL_ENABLE OUTPUT_SSL_CONTENT
+for ARG in OUTPUT_SSL_CONTENT
 do
   sed -i -e "s|__${ARG}__|${!ARG}|g" config/logstash.conf
 done
