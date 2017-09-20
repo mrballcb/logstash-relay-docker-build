@@ -4,33 +4,25 @@ image:
   imagePullPolicy: IfNotPresent
 replicas: 1
 namespace: default
-uniqueStackId: dev
 persistence:
   enabled: false
+logstash:
+    logstash_env: "dev"
+    input_beats_port: "5044"
+    input_syslog_port: "514"
+    input_json_port: "8000"
+    output_dest_host: "beats-logs.example.com"
+    output_dest_port: "6000"
+    output_ssl_enable: "false"
+    # Uncomment the below setting for TLS encryption. YOU MUST PUT THE REQUIRED FILES IN PLACE
+    # This is really ugly, but it works. The "|" method did not work, the trailing \n messed up sed.
+    #output_ssl_content: 'ssl_cacert => "/logstash/certs/cacert.pem"\n     ssl_key => "/logstash/certs/logstash.key"\n     ssl_cert => "/logstash/certs/logstash.pem"\n     ssl_verify => true'
 env:
   # The "logstash_debug" env variable will prep the config file, but will not start
   # logstash.  You can connect and do some debugging if things don't work as expected.
   # HINT:  bash -x /deploy.sh
   #- name: logstash_debug
   #  value: "1"
-  - name: LOGSTASH_ENV
-    value: "dev"
-  - name: INPUT_BEATS_PORT
-    value: "5044"
-  - name: INPUT_SYSLOG_PORT
-    value: "514"
-  - name: INPUT_JSON_PORT
-    value: "8000"
-  - name: OUTPUT_DEST_HOST
-    value: "beats-logs.example.com"
-  - name: OUTPUT_DEST_PORT
-    value: "6000"
-  - name: OUTPUT_SSL_ENABLE
-    value: "false"
-  # Uncomment the below setting for TLS encryption. YOU MUST PUT THE REQUIRED FILES IN PLACE
-  #- name: OUTPUT_SSL_CONTENT
-  #  # This is really ugly, but it works. The "|" method did not work, the trailing \n messed up sed.
-  #  value: 'ssl_cacert => "/logstash/certs/cacert.pem"\n     ssl_key => "/logstash/certs/logstash.key"\n     ssl_cert => "/logstash/certs/logstash.pem"\n     ssl_verify => true'
 resources:
   limits:
     cpu: 100m

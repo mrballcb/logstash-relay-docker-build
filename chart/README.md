@@ -24,17 +24,9 @@ A service is deployed that uses the name and the namespace to make the pod acces
 with one common name throughout the entire cluster.  For example, if your name is
 "logstash-relay" and you deployed it to namespace "dev", then the service DNS would
 be "logstash-relay.dev"  This DNS name will be reachable to any pod in the Kube
-cluster.  The FQDN is actually logstash-relay.dev.svc.cluster.local", but typically
-"svc.cluster.local" is in the /etc/resolv.conf, so you probably can get away with
-using just the service DNS value.
-
-### Updating certs
-This docker image nor this chart work for multiple certs.  Instead you launch multiple
-instances, one with each cert listening on a different port.  So as you approach a cert
-expiration you have to create second logstash ingestion point in your ELK stack with
-a new cert, listening on a different port, and add that port to the load balancer.  Then
-you have to create a second logstash-relay instance, listening on different ports with
-the new cert, configured to ship to the new logstash port on the ELK stack.
+cluster.  The FQDN is actually "logstash-relay.dev.svc.cluster.local", but typically
+"svc.cluster.local" is in the /etc/resolv.conf which allows you to use the shorter
+service DNS value.
 
 ## Build Chart Dependencies
 There are no other chart dependencies.
@@ -61,6 +53,16 @@ Git is configured to ignore chart/values-\*.yaml so git will not complain about 
 untracked file.
 
 ## ConfigMap format
-In `charts/example/configmap.yml` there is an example configmap.  
+In `charts/example/configmap.yml` there is an example configmap if you want to use TLS
+between your relay and your ELK stack.  It is advised you use TLS because not only do you
+get encryption, it acts as an authenticator when you use the self created CA and sign
+your own certs.
 
+## Updating certs
+This docker image nor this chart work for multiple certs.  Instead you launch multiple
+instances, one with each cert listening on a different port.  So as you approach a cert
+expiration you have to create second logstash ingestion point in your ELK stack with
+a new cert, listening on a different port, and add that port to the load balancer.  Then
+you have to create a second logstash-relay instance with a different name, configured to
+ship to the new logstash port on the ELK stack.
 

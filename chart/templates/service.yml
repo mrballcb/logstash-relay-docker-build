@@ -7,13 +7,13 @@ metadata:
     {{- include "default_selector" . | indent 4 }}
 spec:
   ports:
-  - port: 5140
+  - port: {{ .Values.logstash.input_syslog_port }}
     protocol: UDP
     name: syslog
-  - port: 5044
+  - port: {{ .Values.logstash.input_beats_port }}
     protocol: TCP
     name: beats
-  - port: 8000
+  - port: {{ .Values.logstash.input_json_port }}
     protocol: UDP
     name: json
   selector:

@@ -25,20 +25,38 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ default "" .Values.image.imagePullPolicy | quote }}
         ports:
-        - containerPort: 5140
+        - containerPort: {{ .Values.logstash.input_syslog_port }}
           protocol: UDP
           name: syslog
-        - containerPort: 5044
+        - containerPort: {{ .Values.logstash.input_beats_port }}
           protocol: TCP
           name: beats
-        - containerPort: 8000
+        - containerPort: {{ .Values.logstash.input_json_port }}
           protocol: UDP
           name: json
         command: ["/deploy.sh"]
-        {{- if .Values.env }}
         env:
+        {{- if .Values.env }}
 {{ toYaml .Values.env | indent 10 }}
         {{- end }}
+          - name: LOGSTASH_ENV
+            value: {{ .Values.logstash.logstash_env | quote }}
+          - name: INPUT_BEATS_PORT
+            value: {{ .Values.logstash.input_beats_port | quote }}
+          - name: INPUT_SYSLOG_PORT
+            value: {{ .Values.logstash.input_syslog_port | quote }}
+          - name: INPUT_JSON_PORT
+            value: {{ .Values.logstash.input_json_port | quote }}
+          - name: OUTPUT_DEST_HOST
+            value: {{ .Values.logstash.output_dest_host | quote }}
+          - name: OUTPUT_DEST_PORT
+            value: {{ .Values.logstash.output_dest_port | quote }}
+          - name: OUTPUT_SSL_ENABLE
+            value: {{ .Values.logstash.output_ssl_enable | quote }}
+          # Uncomment the below setting for TLS encryption. YOU MUST PUT THE REQUIRED FILES IN PLACE
+          - name: OUTPUT_SSL_CONTENT
+          #  # This is really ugly, but it works. The "|" method did not work, the trailing \n messed up sed.
+            value: {{ .Values.logstash.output_ssl_content | quote }}
         {{- if .Values.nodeSelector }}
         nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
