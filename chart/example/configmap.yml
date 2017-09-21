@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: certs
+  name: certs-{{ template "name" . }}
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "default_selector" . | indent 4 }}

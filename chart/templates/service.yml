@@ -18,3 +18,21 @@ spec:
     name: json
   selector:
     {{- include "default_selector" . | indent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elb-beats-{{ template "name" . }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+  labels:
+    {{- include "default_selector" . | indent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+  - port: {{ .Values.logstash.input_beats_port }}
+    protocol: TCP
+    name: beats
+  selector:
+    {{- include "default_selector" . | indent 4 }}

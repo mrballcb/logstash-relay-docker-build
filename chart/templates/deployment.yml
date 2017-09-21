@@ -71,4 +71,4 @@ spec:
       volumes:
       - name: certs
         configMap:
-          name: certs
+          name: certs-{{ template "name" . }}
